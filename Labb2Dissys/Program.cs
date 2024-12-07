@@ -1,7 +1,14 @@
+using Labb2Dissys.Core;
+using Labb2Dissys.Core.Interfaces;
+using ProjectApp.Core.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IAuctionService, MockAuctionService>();
+
 
 var app = builder.Build();
 
