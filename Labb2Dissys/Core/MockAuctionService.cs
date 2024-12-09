@@ -23,6 +23,7 @@ public class MockAuctionService : IAuctionService
     private static readonly List<Auction> _auctions = new();
 
     // C# style static initializer
+
     static MockAuctionService()
     {
         Auction a1 = new Auction
@@ -33,6 +34,11 @@ public class MockAuctionService : IAuctionService
             Seller = "user1@kth.se",
             StartingPrice = 10000m,
             EndDate = DateTime.Now.AddDays(7),
+            Bids = new List<Bid>
+            {
+                new Bid { Id = 1, Amount = 10500m, Bidder = "bidder1@example.com", Timestamp = DateTime.Now.AddDays(-1) },
+                new Bid { Id = 2, Amount = 11000m, Bidder = "bidder2@example.com", Timestamp = DateTime.Now.AddHours(-12) },
+            }
         };
 
         Auction a2 = new Auction
@@ -43,6 +49,11 @@ public class MockAuctionService : IAuctionService
             Seller = "user1@kth.se",
             StartingPrice = 2000m,
             EndDate = DateTime.Now.AddDays(14),
+            Bids = new List<Bid>
+            {
+                new Bid { Id = 3, Amount = 2100m, Bidder = "bidder3@example.com", Timestamp = DateTime.Now.AddHours(-2) },
+                new Bid { Id = 4, Amount = 2200m, Bidder = "bidder4@example.com", Timestamp = DateTime.Now.AddMinutes(-30) },
+            }
         };
 
         _auctions.Add(a1);
