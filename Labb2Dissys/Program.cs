@@ -1,5 +1,7 @@
 using Labb2Dissys.Core;
 using Labb2Dissys.Core.Interfaces;
+using Labb2Dissys.Persistence;
+using Microsoft.EntityFrameworkCore;
 using ProjectApp.Core.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,8 +9,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<IAuctionService, MockAuctionService>();
+builder.Services.AddScoped<IAuctionService, AuctionService>();
 
+builder.Services.AddScoped<IAuctionPersistence, MySqlAuctionPersistence>();
+
+builder.Services.AddDbContext<AuctionDbContext>(options =>
+    options.UseMySQL(builder.Configuration.GetConnectionString("AuctionDbConnection")));
+
+//automapping of data
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 

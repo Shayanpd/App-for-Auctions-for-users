@@ -1,5 +1,5 @@
 ﻿using Labb2Dissys.Core.Interfaces;
-using ProjectApp.Core.Interfaces;
+/**using ProjectApp.Core.Interfaces;
 
 namespace Labb2Dissys.Core;
 
@@ -59,4 +59,4 @@ public class MockAuctionService : IAuctionService
         _auctions.Add(a1);
         _auctions.Add(a2);
     }
-}
+}**/

@@ -19,7 +19,7 @@ namespace Labb2Dissys.Controllers
         // GET: AuctionsController
         public ActionResult Index()
         {
-            List<Auction> auctions = _auctionService.GetAllByUserName(User.Identity.Name);
+            List<Auction> auctions = _auctionService.GetAllByUserName( "user1@kth.se"/**User.Identity.Name**/);
             List<AuctionVm> auctionVms = new List<AuctionVm>();
             foreach (var auction in auctions)
             {

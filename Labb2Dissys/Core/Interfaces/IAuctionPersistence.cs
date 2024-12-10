@@ -1,7 +1,7 @@
 ﻿namespace Labb2Dissys.Core.Interfaces;
 
 
-public interface IProjectPersistence
+public interface IAuctionPersistence
 {
     List<Auction> GetAllByUserName(string userName);
     
