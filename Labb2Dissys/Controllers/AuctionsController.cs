@@ -2,8 +2,8 @@ using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Labb2Dissys.Core;
+using Labb2Dissys.Core.Interfaces;
 using Labb2Dissys.Models.Auctions;
-using ProjectApp.Core.Interfaces;
 
 namespace Labb2Dissys.Controllers
 {
@@ -47,7 +47,7 @@ namespace Labb2Dissys.Controllers
             }
         }
         
-        /*
+        
         // GET: AuctionsController/Create
         public ActionResult Create()
         {
@@ -62,8 +62,8 @@ namespace Labb2Dissys.Controllers
             {
                 if(ModelState.IsValid)
                 {
-                    string name = createAuctionVm.Name;
-                    string userName = User.Identity.Name;
+                    string name = createAuctionVm.Title;
+                    string userName = "user1@kth.se"; //User.Identity.Name;
                     _auctionService.Add(userName, name);
                     return RedirectToAction("Index");
                 }
@@ -113,6 +113,6 @@ namespace Labb2Dissys.Controllers
                 return View();
             }
         }
-        */
+    
     }
 }

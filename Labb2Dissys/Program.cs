@@ -2,7 +2,6 @@ using Labb2Dissys.Core;
 using Labb2Dissys.Core.Interfaces;
 using Labb2Dissys.Persistence;
 using Microsoft.EntityFrameworkCore;
-using ProjectApp.Core.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

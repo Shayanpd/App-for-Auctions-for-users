@@ -1,6 +1,5 @@
 ﻿using System.Data;
 using Labb2Dissys.Core.Interfaces;
-using ProjectApp.Core.Interfaces;
 
 namespace Labb2Dissys.Core
 {
@@ -37,7 +36,11 @@ namespace Labb2Dissys.Core
         /// </summary>
         public void Add(string userName, string title)
         {
-            throw new NotImplementedException("Add");
+            if(userName == null) throw new DataException("User name is required");
+            if(title == null || title.Length > 128) throw new DataException("Title is required and cannot be longer than 128 characters");
+            
+            Auction auction = new Auction(title, userName);
+            _auctionPersistence.Save(auction);
         }
     }
 }

@@ -2,6 +2,7 @@
 using AutoMapper;
 using Labb2Dissys.Core;
 using Labb2Dissys.Core.Interfaces;
+using Microsoft.Build.Evaluation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Labb2Dissys.Persistence
@@ -40,7 +41,8 @@ namespace Labb2Dissys.Persistence
 
             foreach (BidDb bidDb in auctionDb.BidDbs)
             {
-                auction.Bids.Add(_mapper.Map<Bid>(bidDb));
+                Bid bid = _mapper.Map<Bid>(bidDb);
+                auction.AddBid(bid);
             }
 
             return auction;
@@ -48,7 +50,9 @@ namespace Labb2Dissys.Persistence
 
         public void Save(Auction auction)
         {
-            throw new NotImplementedException("Save");
+            AuctionDb auctionDb = _mapper.Map<AuctionDb>(auction);
+            _dbContext.AuctionDbs.Add(auctionDb);
+            _dbContext.SaveChanges();
         }
     }
 }

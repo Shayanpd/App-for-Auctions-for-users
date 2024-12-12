@@ -1,6 +1,4 @@
-﻿using Labb2Dissys.Core;
-
-namespace ProjectApp.Core.Interfaces;
+﻿namespace Labb2Dissys.Core.Interfaces;
 
 public interface IAuctionService
 {
@@ -8,5 +6,5 @@ public interface IAuctionService
     
     Auction GetById(int id, string userName);
     
-    void Add(string userName, string Title);  
+    void Add(string userName, string title);  
 }
