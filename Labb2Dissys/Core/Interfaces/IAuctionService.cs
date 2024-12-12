@@ -6,5 +6,5 @@ public interface IAuctionService
     
     Auction GetById(int id, string userName);
     
-    void Add(string userName, string title);  
+    void Add(string userName, string title, decimal startingPrice, string description, DateTime? endDate = null); 
 }

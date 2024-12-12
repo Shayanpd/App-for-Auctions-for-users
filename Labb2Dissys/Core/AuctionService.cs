@@ -34,12 +34,13 @@ namespace Labb2Dissys.Core
         /// <summary>
         /// Adds a new auction to the database.
         /// </summary>
-        public void Add(string userName, string title)
+        public void Add(string userName, string title, decimal startingPrice, string description, DateTime? endDate = null)
         {
-            if(userName == null) throw new DataException("User name is required");
-            if(title == null || title.Length > 128) throw new DataException("Title is required and cannot be longer than 128 characters");
-            
-            Auction auction = new Auction(title, userName);
+            if (userName == null) throw new DataException("User name is required");
+            if (title == null || title.Length > 128) throw new DataException("Title is required and cannot be longer than 128 characters");
+            if (startingPrice <= 0) throw new DataException("Starting price must be greater than 0");
+
+            Auction auction = new Auction(title, userName, startingPrice, description, endDate);
             _auctionPersistence.Save(auction);
         }
     }

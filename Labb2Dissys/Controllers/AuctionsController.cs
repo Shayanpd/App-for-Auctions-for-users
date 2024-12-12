@@ -62,9 +62,12 @@ namespace Labb2Dissys.Controllers
             {
                 if(ModelState.IsValid)
                 {
-                    string name = createAuctionVm.Title;
-                    string userName = "user1@kth.se"; //User.Identity.Name;
-                    _auctionService.Add(userName, name);
+                    string userName = "user1@kth.se"; // Replace with User.Identity.Name if using authentication
+                    decimal startingPrice = createAuctionVm.StartingPrice;
+                    string description = createAuctionVm.Description ?? string.Empty;
+                    DateTime? endDate = createAuctionVm.EndDate;
+
+                    _auctionService.Add(userName, createAuctionVm.Title, startingPrice, description, endDate);
                     return RedirectToAction("Index");
                 }
                 return View(createAuctionVm);

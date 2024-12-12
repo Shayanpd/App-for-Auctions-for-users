@@ -5,13 +5,14 @@ namespace Labb2Dissys.Core
 {
     public class Auction
     {
-        public Auction(string title, string userName)
+        
+        public Auction(string title, string userName, decimal startingPrice, string description, DateTime? endDate = null)
         {
             Title = title;
             Seller = userName;
-            Description = "";
-            EndDate = DateTime.Now.AddDays(14);
-            
+            StartingPrice = startingPrice;
+            Description = description;
+            EndDate = endDate ?? DateTime.Now.AddDays(14);
         }
         
         public Auction() { }
