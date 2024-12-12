@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Labb2Dissys.Migrations.Labb2Dissys
 {
     [DbContext(typeof(Labb2DissysContext))]
-    [Migration("20241212182034_InitialCreate_Identity")]
+    [Migration("20241212194338_InitialCreate_Identity")]
     partial class InitialCreate_Identity
     {
         /// <inheritdoc />

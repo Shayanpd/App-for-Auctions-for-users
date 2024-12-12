@@ -2,20 +2,31 @@ using Labb2Dissys.Core;
 using Labb2Dissys.Core.Interfaces;
 using Labb2Dissys.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Labb2Dissys.Data;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<IAuctionService, AuctionService>();
-
-builder.Services.AddScoped<IAuctionPersistence, MySqlAuctionPersistence>();
-
+// Register AuctionDbContext for auction-related entities
 builder.Services.AddDbContext<AuctionDbContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("AuctionDbConnection")));
 
-//automapping of data
+// Register Labb2DissysContext for ASP.NET Identity
+builder.Services.AddDbContext<Labb2DissysContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Labb2DissysContextConnection")));
+
+// Add Identity services, tied to Labb2DissysContext
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<Labb2DissysContext>();
+
+// Register application services
+builder.Services.AddScoped<IAuctionService, AuctionService>();
+builder.Services.AddScoped<IAuctionPersistence, MySqlAuctionPersistence>();
+
+// AutoMapper registration
 builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
@@ -24,7 +35,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -33,10 +43,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication(); // Ensure Authentication Middleware is included
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages(); // Enable Razor Pages for Identity
 
 app.Run();
