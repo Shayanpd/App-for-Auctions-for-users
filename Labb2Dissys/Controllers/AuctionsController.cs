@@ -46,7 +46,7 @@ namespace Labb2Dissys.Controllers
                 return BadRequest();
             }
         }
-
+        
         /*
         // GET: AuctionsController/Create
         public ActionResult Create()

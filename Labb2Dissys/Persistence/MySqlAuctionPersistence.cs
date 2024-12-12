@@ -35,8 +35,15 @@ namespace Labb2Dissys.Persistence
                 .FirstOrDefault();
 
             if (auctionDb == null) throw new DataException("Auction not found");
+            
+            Auction auction = _mapper.Map<Auction>(auctionDb);
 
-            return _mapper.Map<Auction>(auctionDb);
+            foreach (BidDb bidDb in auctionDb.BidDbs)
+            {
+                auction.Bids.Add(_mapper.Map<Bid>(bidDb));
+            }
+
+            return auction;
         }
 
         public void Save(Auction auction)
