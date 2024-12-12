@@ -3,6 +3,7 @@ using Labb2Dissys.Core.Interfaces;
 using Labb2Dissys.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Labb2Dissys.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,15 @@ builder.Services.AddDbContext<Labb2DissysContext>(options =>
 // Add Identity services, tied to Labb2DissysContext
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<Labb2DissysContext>();
+
+// Force users to authorize
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
+
 
 // Register application services
 builder.Services.AddScoped<IAuctionService, AuctionService>();
