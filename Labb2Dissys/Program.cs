@@ -16,7 +16,7 @@ builder.Services.AddDbContext<AuctionDbContext>(options =>
 
 // Register Labb2DissysContext for ASP.NET Identity
 builder.Services.AddDbContext<Labb2DissysContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Labb2DissysContextConnection")));
+    options.UseMySQL(builder.Configuration.GetConnectionString("Labb2DissysContextConnection")));
 
 // Add Identity services, tied to Labb2DissysContext
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
