@@ -16,4 +16,7 @@ public interface IAuctionPersistence
     Auction GetByIdOnly(int id);
     
     void Save(Auction project);
+    
+    void Update(Auction auction);
+
 }

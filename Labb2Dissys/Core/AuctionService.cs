@@ -69,5 +69,20 @@ namespace Labb2Dissys.Core
             Auction auction = new Auction(title, userName, startingPrice, description, endDate);
             _auctionPersistence.Save(auction);
         }
+        
+        public void UpdateDescription(int auctionId, string description)
+        {
+            var auction = _auctionPersistence.GetByIdOnly(auctionId);
+
+            if (auction == null)
+            {
+                throw new KeyNotFoundException("Auction not found.");
+            }
+
+            auction.Description = description;
+            _auctionPersistence.Update(auction);
+        }
+        
+
     }
 }

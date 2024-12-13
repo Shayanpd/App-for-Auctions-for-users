@@ -22,7 +22,6 @@
 
     <ItemGroup>
       <Folder Include="SQL\" />
-      <Folder Include="Views\Auctions\" />
     </ItemGroup>
 
 </Project>

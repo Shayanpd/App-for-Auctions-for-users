@@ -136,27 +136,77 @@ namespace Labb2Dissys.Controllers
         // GET: AuctionsController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            // Retrieve the auction by ID
+            var auction = _auctionService.GetByIdOnly(id);
+
+            // Ensure the auction exists
+            if (auction == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure the current user is the owner
+            if (auction.Seller != User.Identity.Name)
+            {
+                return Forbid(); // HTTP 403 Forbidden
+            }
+
+            // Create a view model with only the Description field
+            var editAuctionVm = new EditAuctionVm
+            {
+                Id = auction.Id,
+                Description = auction.Description
+            };
+
+            return View(editAuctionVm);
         }
+        
         // POST: AuctionsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, EditAuctionVm editAuctionVm)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(editAuctionVm); // Return the form with validation errors
+            }
+
             try
             {
+                // Retrieve the auction by ID
+                var auction = _auctionService.GetByIdOnly(id);
+
+                // Ensure the auction exists
+                if (auction == null)
+                {
+                    return NotFound();
+                }
+
+                // Ensure the current user is the owner
+                if (auction.Seller != User.Identity.Name)
+                {
+                    return Forbid(); // HTTP 403 Forbidden
+                }
+
+                // Update the description via the service
+                _auctionService.UpdateDescription(id, editAuctionVm.Description);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(editAuctionVm);
             }
         }
+
+        
         // GET: AuctionsController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
+        
+        
         // POST: AuctionsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -171,6 +221,7 @@ namespace Labb2Dissys.Controllers
                 return View();
             }
         }
+        
     
     }
 }

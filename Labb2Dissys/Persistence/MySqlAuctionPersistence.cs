@@ -173,5 +173,18 @@ namespace Labb2Dissys.Persistence
             _dbContext.AuctionDbs.Add(auctionDb);
             _dbContext.SaveChanges();
         }
+        
+        public void Update(Auction auction)
+        {
+            var existingAuction = _dbContext.AuctionDbs.Find(auction.Id);
+            if (existingAuction == null)
+            {
+                throw new KeyNotFoundException("Auction not found.");
+            }
+
+            existingAuction.Description = auction.Description;
+            _dbContext.SaveChanges();
+        }
+
     }
 }
