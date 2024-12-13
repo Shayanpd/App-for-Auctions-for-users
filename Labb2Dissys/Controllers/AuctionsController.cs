@@ -49,26 +49,36 @@ namespace Labb2Dissys.Controllers
         public ActionResult WonAuctions()
         {
             string userName = User.Identity.Name; // Retrieve logged-in user's identity
-            var allAuctions = _auctionService.GetAllClosed(); // Fetch all active auctions
-            var userActiveBids = allAuctions
+            var allWonAuctions = _auctionService.GetAllClosedWithHighestBidByUser(userName); // Fetch all active auctions
+            /**var userActiveBids = allAuctions
                 .Where(auction => auction.Bids.Any(bid => bid.Bidder == userName)) // Filter where user placed bids
                 .OrderBy(auction => auction.EndDate)
-                .ToList();
+                .ToList();**/
 
-            var wonAuctionVms = userActiveBids.Select(WonAuctionVm.FromAuction).ToList();
+            var wonAuctionVms = allWonAuctions.Select(WonAuctionVm.FromAuction).ToList();
             return View(wonAuctionVms);
         }
         
-        public ActionResult CurrentBidsForUser()
+        public ActionResult UserBids()
         {
             string userName = User.Identity.Name; // Retrieve logged-in user's identity
-            var allAuctions = _auctionService.GetAllActive(); // Fetch all active auctions
-            var userActiveBids = allAuctions
-                .Where(auction => auction.Bids.Any(bid => bid.Bidder == userName)) // Filter where user placed bids
-                .ToList();
+            Console.WriteLine($"Fetching active auctions for user: {userName}"); // Print user name
 
-            var wonAuctionVms = userActiveBids.Select(WonAuctionVm.FromAuction).ToList();
-            return View(wonAuctionVms);
+            // Fetch all active auctions where the user has placed a bid
+            var allActiveAuctionsWhereUserBid = _auctionService.GetAllActiveWhereUserBid(userName); 
+            Console.WriteLine($"Number of active auctions with bids from '{userName}': {allActiveAuctionsWhereUserBid.Count}");
+
+            // Filter auctions where the user has placed a bid
+            
+
+            // Convert the filtered auctions into the ViewModel
+            var userBidsVms = allActiveAuctionsWhereUserBid.Select(UserBidsVm.FromAuction).ToList();
+
+            // Log the number of ViewModels created
+            Console.WriteLine($"Number of ViewModels created: {userBidsVms.Count}");
+
+            // Return the View with the user bids ViewModels
+            return View(userBidsVms);
         }
 
         // GET: AuctionsController/Details/5

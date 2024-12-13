@@ -39,33 +39,43 @@ namespace Labb2Dissys.Persistence
             return auctionDbs.Select(a => _mapper.Map<Auction>(a)).ToList();
         }
         
-        public List<Auction> GetAllClosed()
+        public List<Auction> GetAllClosedWithHighestBidByUser(string userName)
         {
             var now = DateTime.Now;
+    
+            // Get closed auctions and their bids, filtering to only include auctions where the user is the highest bidder
             var auctionDbs = _dbContext.AuctionDbs
-                .Where(a => a.EndDate < now) // Filter auctions that have ended
+                .Where(a => a.EndDate < now) // Get only closed auctions
                 .Include(a => a.BidDbs) // Include associated bids
+                .Where(a => a.BidDbs.Any(b => b.Bidder == userName)) // Ensure the user has placed a bid
                 .ToList();
 
-            // Map auctions and their bids individually
+            // Now, filter further by checking if the user has the highest bid
             List<Auction> auctions = new List<Auction>();
-
+    
             foreach (var auctionDb in auctionDbs)
             {
-                // Map auction
-                Auction auction = _mapper.Map<Auction>(auctionDb);
+                // Get the highest bid for this auction
+                var highestBid = auctionDb.BidDbs.OrderByDescending(b => b.Amount).FirstOrDefault();
 
-                // Map bids for the auction
-                foreach (BidDb bidDb in auctionDb.BidDbs)
+                // Check if the highest bid belongs to the logged-in user
+                if (highestBid != null && highestBid.Bidder == userName)
                 {
-                    Bid bid = _mapper.Map<Bid>(bidDb);
-                    auction.AddBid(bid); // Add bid to the auction
-                }
+                    // Map the auction and its bids to the Auction model
+                    Auction auction = _mapper.Map<Auction>(auctionDb);
 
-                auctions.Add(auction); // Add auction to the result list
+                    // Map and add all bids to the auction
+                    foreach (var bidDb in auctionDb.BidDbs)
+                    {
+                        Bid bid = _mapper.Map<Bid>(bidDb);
+                        auction.AddBid(bid); // Add bid to the auction
+                    }
+
+                    auctions.Add(auction); // Add auction to the result list
+                }
             }
 
-            return auctions; // Return the fully mapped list of auctions
+            return auctions; // Return the list of auctions where the user has the highest bid
         }
 
 
@@ -88,6 +98,53 @@ namespace Labb2Dissys.Persistence
 
             return auction;
         }
+        public List<Auction> GetAllActiveWhereUserBid(string userName)
+        {
+            var now = DateTime.Now;
+
+            // Print the user for whom we are fetching auctions
+            Console.WriteLine($"Fetching active auctions for user: {userName}");
+
+            // Get active auctions and their bids, filtering to only include auctions where the user placed at least one bid
+            var auctionDbs = _dbContext.AuctionDbs
+                .Where(a => a.EndDate > now) // Get only active auctions
+                .Include(a => a.BidDbs) // Include associated bids
+                .Where(a => a.BidDbs.Any(b => b.Bidder == userName)) // Ensure the user has placed at least one bid
+                .ToList();
+
+            // Print how many auctions we fetched
+            Console.WriteLine($"Number of active auctions found for user '{userName}': {auctionDbs.Count}");
+
+            List<Auction> auctions = new List<Auction>();
+
+            // Loop through each auction and print the details
+            foreach (var auctionDb in auctionDbs)
+            {
+                Console.WriteLine($"Processing auction: {auctionDb.Title} (ID: {auctionDb.Id})");
+
+                // Print how many bids are there for the auction
+                Console.WriteLine($"Auction '{auctionDb.Title}' has {auctionDb.BidDbs.Count} bids.");
+
+                // Map auction
+                Auction auction = _mapper.Map<Auction>(auctionDb);
+
+                // Map and add all bids to the auction
+                foreach (var bidDb in auctionDb.BidDbs)
+                {
+                    Bid bid = _mapper.Map<Bid>(bidDb);
+                    auction.AddBid(bid); // Add bid to the auction
+
+                    // Print out the details of each bid
+                    Console.WriteLine($"Bid placed by '{bid.Bidder}' with amount: {bid.Amount}.");
+                }
+
+                auctions.Add(auction); // Add auction to the result list
+            }
+
+            // Return the list of active auctions where the user placed a bid
+            return auctions;
+        }
+
         
         public Auction GetByIdOnly(int id)
         {

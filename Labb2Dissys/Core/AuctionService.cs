@@ -27,9 +27,15 @@ namespace Labb2Dissys.Core
             return auctions;
         }
         
-        public List<Auction> GetAllClosed()
+        public List<Auction> GetAllClosedWithHighestBidByUser(string userName)
         {
-            List<Auction> auctions = _auctionPersistence.GetAllClosed();
+            List<Auction> auctions = _auctionPersistence.GetAllClosedWithHighestBidByUser(userName);
+            return auctions;
+        }
+        
+        public List<Auction> GetAllActiveWhereUserBid(string userName)
+        {
+            List<Auction> auctions = _auctionPersistence.GetAllActiveWhereUserBid(userName);
             return auctions;
         }
         

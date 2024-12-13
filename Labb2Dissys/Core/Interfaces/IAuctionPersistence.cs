@@ -7,7 +7,9 @@ public interface IAuctionPersistence
     
     List<Auction> GetAllActive();
     
-    List<Auction> GetAllClosed();
+    List<Auction> GetAllClosedWithHighestBidByUser(string userName);
+    
+    List<Auction> GetAllActiveWhereUserBid(string userName);
     
     Auction GetById(int id, string userName);
 

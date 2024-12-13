@@ -5,8 +5,10 @@ public interface IAuctionService
     List<Auction> GetAllByUserName(string userName);
 
     List<Auction> GetAllActive();
+
+    List<Auction> GetAllClosedWithHighestBidByUser(string userName);
     
-    List<Auction> GetAllClosed();
+    List<Auction> GetAllActiveWhereUserBid(string userName);
     Auction GetById(int id, string userName);
     
     Auction GetByIdOnly(int id);
