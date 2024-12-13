@@ -5,7 +5,13 @@ public interface IAuctionPersistence
 {
     List<Auction> GetAllByUserName(string userName);
     
+    List<Auction> GetAllActive();
+    
+    List<Auction> GetAllClosed();
+    
     Auction GetById(int id, string userName);
+
+    Auction GetByIdOnly(int id);
     
     void Save(Auction project);
 }

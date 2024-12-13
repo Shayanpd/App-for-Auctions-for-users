@@ -28,6 +28,9 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Auctions" asp-action="Index">View Auctions</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Auctions" asp-action="WonAuctions">View Won Auctions</a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav">
                     @if (User.Identity.IsAuthenticated)
@@ -48,6 +51,10 @@
                         </li>
                     }
                 </ul>
+                <div class="d-flex">
+                    <a href="https://localhost:7138/Identity/Account/Login" class="btn btn-primary me-2">Login</a>
+                    <a href="https://localhost:7138/Identity/Account/Register" class="btn btn-secondary">Register</a>
+                </div>
             </div>
         </div>
     </nav>

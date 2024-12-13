@@ -16,7 +16,7 @@ namespace Labb2Dissys.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Labb2Dissys.Persistence.AuctionDb", b =>
@@ -54,7 +54,7 @@ namespace Labb2Dissys.Migrations
                         {
                             Id = -1,
                             Description = "Classic vintage cars from the 1950s.",
-                            EndDate = new DateTime(2024, 12, 17, 0, 50, 34, 162, DateTimeKind.Local).AddTicks(6072),
+                            EndDate = new DateTime(2024, 12, 19, 22, 3, 49, 714, DateTimeKind.Local).AddTicks(4428),
                             Seller = "user1@kth.se",
                             StartingPrice = 10000m,
                             Title = "Test Car Auction"
@@ -63,7 +63,7 @@ namespace Labb2Dissys.Migrations
                         {
                             Id = -2,
                             Description = "Någonting.",
-                            EndDate = new DateTime(2024, 12, 24, 0, 50, 34, 162, DateTimeKind.Local).AddTicks(6108),
+                            EndDate = new DateTime(2024, 12, 26, 22, 3, 49, 714, DateTimeKind.Local).AddTicks(4468),
                             Seller = "user1@kth.se",
                             StartingPrice = 2000m,
                             Title = "Antique Vase Auction Test Data"
@@ -102,7 +102,7 @@ namespace Labb2Dissys.Migrations
                             Amount = 10500m,
                             AuctionId = -1,
                             Bidder = "bidder1@kth.se",
-                            Timestamp = new DateTime(2024, 12, 9, 0, 50, 34, 162, DateTimeKind.Local).AddTicks(6197)
+                            Timestamp = new DateTime(2024, 12, 11, 22, 3, 49, 714, DateTimeKind.Local).AddTicks(4625)
                         },
                         new
                         {
@@ -110,7 +110,7 @@ namespace Labb2Dissys.Migrations
                             Amount = 12000m,
                             AuctionId = -2,
                             Bidder = "bidder2@kth.se",
-                            Timestamp = new DateTime(2024, 12, 8, 0, 50, 34, 162, DateTimeKind.Local).AddTicks(6199)
+                            Timestamp = new DateTime(2024, 12, 10, 22, 3, 49, 714, DateTimeKind.Local).AddTicks(4628)
                         });
                 });
 

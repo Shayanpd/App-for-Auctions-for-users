@@ -21,12 +21,32 @@ namespace Labb2Dissys.Core
             return auctions;
         }
 
+        public List<Auction> GetAllActive()
+        {
+            List<Auction> auctions = _auctionPersistence.GetAllActive();
+            return auctions;
+        }
+        
+        public List<Auction> GetAllClosed()
+        {
+            List<Auction> auctions = _auctionPersistence.GetAllClosed();
+            return auctions;
+        }
+        
+
         /// <summary>
         /// Retrieves auction details by ID for a given seller.
         /// </summary>
         public Auction GetById(int id, string userName)
         {
             Auction auction = _auctionPersistence.GetById(id, userName);
+            if (auction == null) throw new DataException("Auction not found");
+            return auction;
+        }
+
+        public Auction GetByIdOnly(int id)
+        {
+            Auction auction = _auctionPersistence.GetByIdOnly(id);
             if (auction == null) throw new DataException("Auction not found");
             return auction;
         }

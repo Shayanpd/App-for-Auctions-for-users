@@ -1,10 +1,10 @@
-@model IEnumerable<Labb2Dissys.Models.Auctions.AuctionVm>
+@model IEnumerable<Labb2Dissys.Models.Auctions.WonAuctionVm>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "WonAuctions";
 }
 
-<h1>All Auctions</h1>
+<h1>WonAuctions</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -17,6 +17,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HighestBid)
             </th>
             <th></th>
         </tr>
@@ -31,9 +34,12 @@
                 @Html.DisplayFor(modelItem => item.EndDate)
             </td>
             <td>
-                <!--@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |-->
-                @Html.ActionLink("Details", "Details", new { id = item.Id})<!-- |-->
-                <!--@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })-->
+                @Html.DisplayFor(modelItem => item.HighestBid)
+            </td>
+            <td>
+            <!--@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })-->
             </td>
         </tr>
 }

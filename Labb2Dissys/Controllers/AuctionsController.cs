@@ -19,14 +19,56 @@ namespace Labb2Dissys.Controllers
         // GET: AuctionsController
         public ActionResult Index()
         {
-            List<Auction> auctions = _auctionService.GetAllByUserName( "user1@kth.se"/**User.Identity.Name**/);
+            //List<Auction> auctions = _auctionService.GetAllByUserName( "user1@kth.se"/**User.Identity.Name**/);
+            List<Auction> auctions = _auctionService.GetAllActive();
             List<AuctionVm> auctionVms = new List<AuctionVm>();
+            
+            auctions = auctions.OrderBy(auction => auction.EndDate).ToList();
+            
             foreach (var auction in auctions)
             {
                 auctionVms.Add(AuctionVm.FromAuction(auction));
             }
 
             return View(auctionVms);
+        }
+        
+        public ActionResult ActiveBids()
+        {
+            string userName = User.Identity.Name; // Retrieve logged-in user's identity
+            var allAuctions = _auctionService.GetAllActive(); // Fetch all active auctions
+            var userActiveBids = allAuctions
+                .Where(auction => auction.Bids.Any(bid => bid.Bidder == userName)) // Filter where user placed bids
+                .OrderBy(auction => auction.EndDate)
+                .ToList();
+
+            var auctionVms = userActiveBids.Select(AuctionVm.FromAuction).ToList();
+            return View(auctionVms);
+        }
+        
+        public ActionResult WonAuctions()
+        {
+            string userName = User.Identity.Name; // Retrieve logged-in user's identity
+            var allAuctions = _auctionService.GetAllClosed(); // Fetch all active auctions
+            var userActiveBids = allAuctions
+                .Where(auction => auction.Bids.Any(bid => bid.Bidder == userName)) // Filter where user placed bids
+                .OrderBy(auction => auction.EndDate)
+                .ToList();
+
+            var wonAuctionVms = userActiveBids.Select(WonAuctionVm.FromAuction).ToList();
+            return View(wonAuctionVms);
+        }
+        
+        public ActionResult CurrentBidsForUser()
+        {
+            string userName = User.Identity.Name; // Retrieve logged-in user's identity
+            var allAuctions = _auctionService.GetAllActive(); // Fetch all active auctions
+            var userActiveBids = allAuctions
+                .Where(auction => auction.Bids.Any(bid => bid.Bidder == userName)) // Filter where user placed bids
+                .ToList();
+
+            var wonAuctionVms = userActiveBids.Select(WonAuctionVm.FromAuction).ToList();
+            return View(wonAuctionVms);
         }
 
         // GET: AuctionsController/Details/5
@@ -35,10 +77,13 @@ namespace Labb2Dissys.Controllers
             Console.WriteLine($"Received ID: {id}"); // Debugging
             try
             {
-                Auction auction = _auctionService.GetById(id, "user1@kth.se"/**User.Identity.Name**/); // current user, hårdkodat ATM
+                //Auction auction = _auctionService.GetById(id, User.Identity.Name); // current user, hårdkodat ATM
+                Auction auction = _auctionService.GetByIdOnly(id);
                 if (auction == null) return BadRequest(); // HTTP 400
 
                 AuctionDetailsVm detailsVm = AuctionDetailsVm.FromAuction(auction);
+                
+                detailsVm.Bids = detailsVm.Bids.OrderByDescending(bid => bid.Amount).ToList();
                 return View(detailsVm);
             }
             catch (DataException ex)
@@ -62,7 +107,7 @@ namespace Labb2Dissys.Controllers
             {
                 if(ModelState.IsValid)
                 {
-                    string userName = "user1@kth.se"; // Replace with User.Identity.Name if using authentication
+                    string userName = User.Identity.Name; // Replace with User.Identity.Name if using authentication
                     decimal startingPrice = createAuctionVm.StartingPrice;
                     string description = createAuctionVm.Description ?? string.Empty;
                     DateTime? endDate = createAuctionVm.EndDate;
