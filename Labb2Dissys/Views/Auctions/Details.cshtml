@@ -3,6 +3,22 @@
 @{
     ViewData["Title"] = "Details";
 }
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (ViewData.ModelState.Any())
+{
+    foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+    {
+        <div class="alert alert-danger">
+            @error.ErrorMessage
+        </div>
+    }
+}
 
 <h1>Details</h1>
 
@@ -94,5 +110,14 @@
 
 <div>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" }) |
+    <form asp-action="PutBid" method="post" class="d-inline">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="AuctionId" value="@Model.Id" />
+        <div class="form-group">
+            <label for="Amount">Your Bid</label>
+            <input type="number" name="Amount" class="form-control" required min="0.01" step="0.01" />
+        </div>
+        <button type="submit" class="btn btn-primary">Put Bid</button>
+    </form>
     <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>

@@ -17,6 +17,8 @@ public interface IAuctionPersistence
     
     void Save(Auction project);
     
+    void PutBid(int auctionId, string userName, decimal bidAmount);
+    
     void Update(Auction auction);
 
 }

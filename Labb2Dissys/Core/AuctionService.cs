@@ -69,6 +69,35 @@ namespace Labb2Dissys.Core
             Auction auction = new Auction(title, userName, startingPrice, description, endDate);
             _auctionPersistence.Save(auction);
         }
+
+        public void PutBid(int auctionId, string userName, decimal bidAmount)
+        {
+            if (string.IsNullOrWhiteSpace(userName))
+                throw new ArgumentException("User name is required.", nameof(userName));
+
+            if (bidAmount <= 0)
+                throw new ArgumentException("Bid amount must be greater than zero.", nameof(bidAmount));
+
+            // Fetch the auction by ID
+            var auction = _auctionPersistence.GetByIdOnly(auctionId);
+            if (auction == null)
+                throw new DataException("Auction not found.");
+
+            if (auction.Seller == userName)
+                throw new InvalidOperationException("You cannot bid on your own auction.");
+
+            if (auction.EndDate <= DateTime.Now)
+                throw new InvalidOperationException("The auction has already ended.");
+
+            // Get the highest bid or the starting price
+            var highestBid = auction.Bids.Max(b => (decimal?)b.Amount) ?? auction.StartingPrice;
+
+            if (bidAmount <= highestBid)
+                throw new InvalidOperationException("Your bid must be higher than the current highest bid or starting price.");
+
+            // Delegate to the persistence layer to save the bid
+            _auctionPersistence.PutBid(auctionId, userName, bidAmount);
+        }
         
         public void UpdateDescription(int auctionId, string description)
         {

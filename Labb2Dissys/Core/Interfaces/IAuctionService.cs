@@ -13,6 +13,8 @@ public interface IAuctionService
     
     Auction GetByIdOnly(int id);
     
+    void PutBid(int auctionId, string userName,decimal bidAmount);
+    
     void Add(string userName, string title, decimal startingPrice, string description, DateTime? endDate = null); 
     void UpdateDescription(int auctionId, string description);
 

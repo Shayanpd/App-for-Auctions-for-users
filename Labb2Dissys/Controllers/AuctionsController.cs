@@ -1,4 +1,5 @@
 using System.Data;
+using Azure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Labb2Dissys.Core;
@@ -132,7 +133,52 @@ namespace Labb2Dissys.Controllers
                 return View(createAuctionVm);
             }
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PutBid(int AuctionId, decimal Amount)
+        {
+            try
+            {
+                string userName = User.Identity.Name; // Current logged-in user's name
+                var auction = _auctionService.GetByIdOnly(AuctionId);
+
+                var highestBid = auction.Bids.Max(b => (decimal?)b.Amount) ?? auction.StartingPrice;
+
+                if (auction == null)
+                {
+                    ModelState.AddModelError(string.Empty, "The auction does not exist.");
+                }
+                else if (auction.Seller == userName)
+                {
+                    ModelState.AddModelError(string.Empty, "You cannot bid on your own auction.");
+                }
+                else if (Amount <= highestBid)
+                {
+                    ModelState.AddModelError(string.Empty, "Your bid must be higher than the current highest bid.");
+                }
+                else
+                {
+                    // Place the bid
+                    _auctionService.PutBid(AuctionId, userName, Amount);
+                    TempData["SuccessMessage"] = "Your bid was successfully placed!";
+                    return RedirectToAction("Details", new { id = AuctionId });
+                }
+
+                // Return to the details view with error messages and the auction data
+                var auctionDetails = _auctionService.GetByIdOnly(AuctionId); // Retrieve auction again if necessary
+                var auctionDetailsVm = AuctionDetailsVm.FromAuction(auctionDetails);
+                auctionDetailsVm.Bids = auctionDetailsVm.Bids.OrderByDescending(bid => bid.Amount).ToList();
         
+                return View("Details", auctionDetailsVm);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return RedirectToAction("Details", new { id = AuctionId });
+            }
+        }
+
         // GET: AuctionsController/Edit/5
         public ActionResult Edit(int id)
         {

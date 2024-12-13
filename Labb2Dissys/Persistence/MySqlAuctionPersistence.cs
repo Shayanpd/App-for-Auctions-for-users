@@ -166,6 +166,27 @@ namespace Labb2Dissys.Persistence
 
             return auction;
         }
+        
+        public void PutBid(int auctionId, string userName, decimal bidAmount)
+        {
+            // Fetch the auction from the database
+            var auction = _dbContext.AuctionDbs
+                .Include(a => a.BidDbs)
+                .FirstOrDefault(a => a.Id == auctionId);
+
+            // Create and add the new bid
+            var newBid = new BidDb
+            {
+                AuctionId = auctionId,
+                Bidder = userName,
+                Amount = bidAmount,
+                Timestamp = DateTime.Now
+            };
+            auction.BidDbs.Add(newBid);
+
+            // Save changes to the database
+            _dbContext.SaveChanges();
+        }
 
         public void Save(Auction auction)
         {
